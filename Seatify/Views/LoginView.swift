@@ -137,13 +137,16 @@ struct LoginView: View {
                    let accessToken = json["access"] as? String,
                    let refreshToken = json["refresh"] as? String {
                     
-                    // Store both access and refresh tokens securely
+                    // Store tokens
                     KeychainHelper.storeToken(accessToken, key: "accessToken")
                     KeychainHelper.storeToken(refreshToken, key: "refreshToken")
-                    UserDefaults.standard.set(true, forKey: "isLoggedIn")
-                    
+
+                    // Store username
+                    UserDefaults.standard.set(username, forKey: "username")
+                    UserDefaults.standard.synchronize()
+
                     DispatchQueue.main.async {
-                        onLoginSuccess(username)
+                        onLoginSuccess(username) // Pass username to HomeView
                     }
                 } else {
                     DispatchQueue.main.async {

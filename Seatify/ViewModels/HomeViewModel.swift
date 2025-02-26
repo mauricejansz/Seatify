@@ -74,17 +74,55 @@ class HomeViewModel: ObservableObject {
             do {
                 if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
                    let newAccessToken = json["access"] as? String {
-                    
+
                     // Store the new access token
                     KeychainHelper.storeToken(newAccessToken, key: "accessToken")
                     print("Access token refreshed successfully.")
-                    completion(true)
+
+                    // Fetch user info after token refresh
+                    self.fetchUserInfo { success in
+                        completion(success)
+                    }
                 } else {
                     print("Failed to parse refresh token response.")
                     completion(false)
                 }
             } catch {
                 print("JSON decoding error: \(error)")
+                completion(false)
+            }
+        }.resume()
+    }
+
+    func fetchUserInfo(completion: @escaping (Bool) -> Void) {
+        guard let accessToken = KeychainHelper.retrieveToken(for: "accessToken") else {
+            completion(false)
+            return
+        }
+
+        let url = URL(string: "http://localhost:8000/accounts/api/user/")! // Adjust the API endpoint
+        var request = URLRequest(url: url)
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let data = data,
+                  let httpResponse = response as? HTTPURLResponse,
+                  httpResponse.statusCode == 200 else {
+                completion(false)
+                return
+            }
+
+            do {
+                if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
+                   let username = json["username"] as? String {
+                    
+                    UserDefaults.standard.set(username, forKey: "username")
+                    UserDefaults.standard.synchronize()
+                    completion(true)
+                } else {
+                    completion(false)
+                }
+            } catch {
                 completion(false)
             }
         }.resume()

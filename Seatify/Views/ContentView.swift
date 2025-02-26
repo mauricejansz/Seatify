@@ -12,7 +12,7 @@ struct ContentView: View {
     @State private var username: String = ""
     @State private var isLoggedIn = false
     @State private var showOnboarding = false
-
+    
     var body: some View {
         ZStack {
             switch appState {
@@ -32,16 +32,13 @@ struct ContentView: View {
                     },
                     onLoginSuccess: { loggedInUsername in
                         username = loggedInUsername
+                        UserDefaults.standard.set(loggedInUsername, forKey: "username") // Save username
+                        isLoggedIn = true
                         appState = .home
                     }
                 )
             case .home:
-                HomeView(
-                    username: username,
-                    isLoggedIn: $isLoggedIn,
-                    showOnboarding: $showOnboarding,
-                    appState: $appState
-                )
+                MainTabView(isLoggedIn: $isLoggedIn, showOnboarding: $showOnboarding, appState: $appState)
             case .signUp:
                 SignUpView(
                     onSignUp: {
@@ -49,7 +46,14 @@ struct ContentView: View {
                     }
                 )
             }
-            
+        }
+        .onAppear {
+            // Restore login state
+            if let savedUsername = UserDefaults.standard.string(forKey: "username") {
+                username = savedUsername
+                isLoggedIn = true
+                appState = .home
+            }
         }
     }
 }
