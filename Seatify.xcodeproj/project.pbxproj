@@ -29,9 +29,22 @@
 		7C8610162D402CE9005DB689 /* SeatifyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SeatifyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		7C1D8E1C2D6F963500DE260E /* Exceptions for "Seatify" folder in "Seatify" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 7C860FF62D402CE8005DB689 /* Seatify */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		7C860FF92D402CE8005DB689 /* Seatify */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				7C1D8E1C2D6F963500DE260E /* Exceptions for "Seatify" folder in "Seatify" target */,
+			);
 			path = Seatify;
 			sourceTree = "<group>";
 		};

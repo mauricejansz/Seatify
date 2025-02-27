@@ -11,6 +11,20 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "closure #1 in closure #1 in RestaurantDetailView.fetchAvailableSlots():RestaurantDetailView.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "decodedSlots">
+            </PersistentString>
+            <PersistentString
+               value = "SlotResponse">
+            </PersistentString>
+            <PersistentString
+               value = "data">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "closure #1 in closure #1 in closure #1 in closure #1 in MainTabView.body.getter:MainTabView.swift">
          <PersistentStrings>
             <PersistentString
