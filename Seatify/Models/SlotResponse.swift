@@ -7,9 +7,9 @@
 
 import Foundation
 
-struct SlotResponse: Decodable {
+struct SlotResponse: Codable, Identifiable {
     let id: Int
-    let table: String
+    let table: String  // This stores the table number
     let capacity: Int
     let date: String
     let time: String

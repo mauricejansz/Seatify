@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct RestaurantMenuView: View {
+struct RestaurantMenuTabView: View {
     let restaurantId: Int
     @StateObject private var viewModel = RestaurantMenuViewModel()
 

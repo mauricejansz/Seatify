@@ -10,34 +10,37 @@ import SwiftUI
 struct StarRatingView: View {
     let rating: Double
     let starSize: CGFloat
-
+    var isSelectable: Bool = false
+    var onRatingSelected: ((Double) -> Void)? = nil
+    
     var body: some View {
         HStack(spacing: 2) {
-            ForEach(0..<5) { index in
+            ForEach(0..<5, id: \.self) { index in
                 let starValue = rating - Double(index)
 
-                if starValue >= 1.0 {
-                    Image("star_100") // Full star
-                        .resizable()
-                        .frame(width: starSize, height: starSize)
-                } else if starValue >= 0.75 {
-                    Image("star_75") // Three-quarter star
-                        .resizable()
-                        .frame(width: starSize, height: starSize)
-                } else if starValue >= 0.5 {
-                    Image("star_50") // Half star
-                        .resizable()
-                        .frame(width: starSize, height: starSize)
-                } else if starValue >= 0.25 {
-                    Image("star_25") // One-quarter star
-                        .resizable()
-                        .frame(width: starSize, height: starSize)
-                } else {
-                    Image("star_0") // Empty star
-                        .resizable()
-                        .frame(width: starSize, height: starSize)
-                }
+                Image(getStarImage(for: starValue))
+                    .resizable()
+                    .frame(width: starSize, height: starSize)
+                    .onTapGesture {
+                        if isSelectable {
+                            onRatingSelected?(Double(index) + 1) // Update rating on tap
+                        }
+                    }
             }
+        }
+    }
+
+    private func getStarImage(for starValue: Double) -> String {
+        if starValue >= 1.0 {
+            return "star_100"
+        } else if starValue >= 0.75 {
+            return "star_75"
+        } else if starValue >= 0.5 {
+            return "star_50"
+        } else if starValue >= 0.25 {
+            return "star_25"
+        } else {
+            return "star_0"
         }
     }
 }

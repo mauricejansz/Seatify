@@ -9,18 +9,17 @@ import SwiftUI
 
 struct RestaurantCard: View {
     let restaurant: Restaurant
-    @State private var isBookmarked: Bool = false // Manage bookmark state
-    
+    @State private var isBookmarked: Bool = false // Bookmark state
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            // Restaurant Image
             ZStack(alignment: .topTrailing) {
                 if let image = restaurant.image {
                     Image(uiImage: image)
                         .resizable()
-                        .aspectRatio(contentMode: .fill) // Fill the frame while maintaining aspect ratio
-                        .frame(width: 250, height: 180) // Set a fixed width and height for uniformity
-                        .clipped() // Ensure the image does not exceed the bounds
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: 250, height: 180)
+                        .clipped()
                 } else {
                     Rectangle()
                         .fill(Color.gray.opacity(0.3))
@@ -28,17 +27,18 @@ struct RestaurantCard: View {
                         .overlay(Text("No Image").foregroundColor(.white))
                 }
             }
-            
-            // Restaurant Details
+
             VStack(alignment: .leading, spacing: 6) {
                 HStack {
                     Text(restaurant.name)
                         .font(.montserrat(size: 18, weight: .bold))
                         .foregroundColor(.black)
                         .lineLimit(1)
+
                     Spacer()
+
                     Button(action: {
-                        isBookmarked.toggle()
+                        toggleBookmark()
                     }) {
                         Image("bookmark")
                             .resizable()
@@ -48,25 +48,23 @@ struct RestaurantCard: View {
                             .padding(12)
                     }
                 }
-                
+
                 Text(restaurant.address)
                     .font(.montserrat(size: 14))
                     .foregroundColor(.gray)
                     .multilineTextAlignment(.leading)
-                    .fixedSize(horizontal: false, vertical: true) // Allows wrapping
-                
-                // Rating & Cuisine
+
                 HStack {
                     Image("star")
                         .resizable()
                         .frame(width: 14, height: 14)
-                    
+
                     Text(String(format: "%.1f", restaurant.rating))
                         .font(.montserrat(size: 14, weight: .medium))
                         .foregroundColor(.black)
-                    
+
                     Spacer()
-                    
+
                     Text(restaurant.cuisine)
                         .font(.montserrat(size: 12))
                         .padding(.horizontal, 10)
@@ -82,6 +80,50 @@ struct RestaurantCard: View {
         .background(Color.white)
         .cornerRadius(12)
         .shadow(radius: 4)
+        .onAppear {
+            checkIfBookmarked()
+        }
+    }
+
+    private func toggleBookmark() {
+        guard let url = URL(string: "\(AppConfig.backendURL)/api/restaurants/saved/\(restaurant.id)/") else { return }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        if let accessToken = KeychainHelper.retrieveToken(for: "accessToken") {
+            request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        }
+        
+        URLSession.shared.dataTask(with: request) { _, response, _ in
+            DispatchQueue.main.async {
+                if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 201 {
+                    isBookmarked = true
+                } else if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
+                    isBookmarked = false
+                }
+            }
+        }.resume()
+    }
+
+    private func checkIfBookmarked() {
+        guard let accessToken = KeychainHelper.retrieveToken(for: "accessToken") else { return }
+        guard let url = URL(string: "\(AppConfig.backendURL)/api/restaurants/saved/") else { return }
+        
+        var request = URLRequest(url: url)
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+
+        URLSession.shared.dataTask(with: request) { data, response, _ in
+            if let data = data {
+                do {
+                    let savedRestaurants = try JSONDecoder().decode([SavedRestaurant].self, from: data)
+                    DispatchQueue.main.async {
+                        isBookmarked = savedRestaurants.contains { $0.restaurant == restaurant.id }
+                    }
+                } catch {
+                    print("Failed to decode saved restaurants")
+                }
+            }
+        }.resume()
     }
 }
 
@@ -101,7 +143,8 @@ struct RestaurantCard_Previews: PreviewProvider {
             is_published: true,
             latitude: 6.9271,
             longitude: 79.8612,
-            image_data: nil // No image for preview
+            image_data: nil,
+            review_count: 1
         )
         
         return RestaurantCard(restaurant: sampleRestaurant)

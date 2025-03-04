@@ -7,9 +7,11 @@
 
 import SwiftUI
 
-struct RestaurantReviewView: View {
+struct RestaurantReviewTabView: View {
     let restaurantId: Int
     @StateObject private var viewModel = ReviewViewModel()
+    @State private var isAddingReview = false
+    @State private var currentUsername: String? = nil // Store logged-in username
     
     var body: some View {
         ScrollView {
@@ -48,14 +50,20 @@ struct RestaurantReviewView: View {
                     // 🔹 Reviews List
                     VStack(spacing: 12) {
                         ForEach(viewModel.reviews) { review in
-                            ReviewCardView(review: review)
+                            ReviewCardView(
+                                review: review,
+                                onDelete: {
+                                    viewModel.deleteReview(reviewId: review.id, restaurantId: restaurantId)
+                                },
+                                isCurrentUser: review.user_name == currentUsername // ✅ Compare stored username with review username
+                            )
                         }
                     }
                 }
                 
                 // 🔹 Add Review Button
                 Button(action: {
-                    print("Navigate to add review screen")
+                    isAddingReview = true
                 }) {
                     Text("Add Your Review")
                         .font(.montserrat(size: 18, weight: .bold))
@@ -72,27 +80,40 @@ struct RestaurantReviewView: View {
         }
         .onAppear {
             viewModel.fetchReviews(for: restaurantId)
+            currentUsername = UserDefaults.standard.string(forKey: "username") // ✅ Retrieve stored username
+        }
+        .sheet(isPresented: $isAddingReview) {
+            AddReviewPopup(isPresented: $isAddingReview) { rating, comment in
+                viewModel.addReview(for: restaurantId, rating: rating, comment: comment)
+            }
         }
     }
 }
 
-// 🔹 Review Card View (Updated for Full Width)
+// 🔹 Review Card View
 struct ReviewCardView: View {
     let review: Review
+    let onDelete: () -> Void
+    let isCurrentUser: Bool
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(review.name)
                 .font(.montserrat(size: 16, weight: .bold))
-            
             StarRatingView(rating: review.rating, starSize: 16)
-            
-            Text("\"\(review.comment)\"")
+            Text(review.comment)
                 .font(.montserrat(size: 14))
                 .foregroundColor(.gray)
+            
+            if isCurrentUser {
+                Button("Delete") {
+                    onDelete()
+                }
+                .foregroundColor(.red)
+            }
         }
         .padding()
-        .frame(maxWidth: .infinity, alignment: .leading) // Full width
+        .frame(maxWidth: .infinity, alignment: .leading) 
         .background(Color.white)
         .clipShape(RoundedRectangle(cornerRadius: 12)) // Proper rounded edges
         .shadow(color: Color.gray.opacity(0.2), radius: 4, x: 0, y: 2) // Soft shadow

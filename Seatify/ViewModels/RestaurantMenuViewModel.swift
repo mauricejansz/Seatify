@@ -13,7 +13,7 @@ class RestaurantMenuViewModel: ObservableObject {
     @Published var isLoading = false
 
     func fetchMenu(for restaurantId: Int) {
-        guard let url = URL(string: "http://localhost:8000/api/restaurants/\(restaurantId)/menu/") else {
+        guard let url = URL(string: "\(AppConfig.backendURL)/api/restaurants/\(restaurantId)/menu/") else {
             print("❌ Invalid URL")
             return
         }

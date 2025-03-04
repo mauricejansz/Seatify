@@ -7,12 +7,12 @@
 
 import SwiftUI
 
-struct RestaurantReservationView: View {
+struct RestaurantReservationTabView: View {
     let restaurant: Restaurant
     @StateObject private var viewModel = RestaurantDetailViewModel()
     @State private var selectedDate: Date = Date()
     @State private var guestCount: Int = 2
-    @State private var selectedSlot: String? = nil
+    @State private var selectedSlot: SlotResponse? = nil // Store full SlotResponse object
     @State private var additionalRequests: String = ""
     
     var body: some View {
@@ -26,7 +26,7 @@ struct RestaurantReservationView: View {
                     .labelsHidden()
             }
             .onChange(of: selectedDate) { oldValue, newValue in
-                viewModel.fetchAvailableSlots(for: restaurant.id, guests: guestCount)
+                viewModel.fetchAvailableSlots(for: restaurant.id, guests: guestCount, date: selectedDate)
             }
             
             Text("Guests")
@@ -36,7 +36,7 @@ struct RestaurantReservationView: View {
                 Button(action: {
                     if guestCount > 1 {
                         guestCount -= 1
-                        viewModel.fetchAvailableSlots(for: restaurant.id, guests: guestCount)
+                        viewModel.fetchAvailableSlots(for: restaurant.id, guests: guestCount, date: selectedDate)
                     }
                 }) {
                     Image(systemName: "minus.circle")
@@ -49,7 +49,7 @@ struct RestaurantReservationView: View {
                 
                 Button(action: {
                     guestCount += 1
-                    viewModel.fetchAvailableSlots(for: restaurant.id, guests: guestCount)
+                    viewModel.fetchAvailableSlots(for: restaurant.id, guests: guestCount, date: selectedDate)
                 }) {
                     Image(systemName: "plus.circle")
                         .foregroundColor(.gray)
@@ -58,21 +58,29 @@ struct RestaurantReservationView: View {
             
             Text("Available Slots")
                 .font(.montserrat(size: 16, weight: .bold))
-            
+
             if viewModel.isLoading {
                 ProgressView()
             } else if let errorMessage = viewModel.errorMessage {
                 Text(errorMessage)
                     .foregroundColor(.red)
+            } else if viewModel.availableSlots.isEmpty {
+                Text("No slots available")
+                    .font(.montserrat(size: 14))
+                    .foregroundColor(.gray)
+                    .padding()
             } else {
-                HStack {
-                    ForEach(viewModel.availableSlots, id: \.self) { slot in
+                VStack {
+                    ForEach(viewModel.availableSlots, id: \.id) { slot in
                         Button(action: { selectedSlot = slot }) {
-                            Text(slot)
-                                .font(.montserrat(size: 14))
-                                .padding()
-                                .background(selectedSlot == slot ? Color.green : Color.gray.opacity(0.2))
-                                .cornerRadius(6)
+                            HStack {
+                                Text("\(slot.time) - Table \(slot.table)")
+                                    .font(.montserrat(size: 14))
+                                    .padding()
+                                    .frame(maxWidth: .infinity, alignment: .center)
+                            }
+                            .background(selectedSlot?.id == slot.id ? Color.green : Color.gray.opacity(0.2))
+                            .cornerRadius(6)
                         }
                     }
                 }
@@ -84,23 +92,27 @@ struct RestaurantReservationView: View {
             TextField("Additional Requests...", text: $additionalRequests)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
             
-            Button(action: {
-                print("Reservation Confirmed for \(guestCount) guests at \(selectedSlot ?? "N/A")")
-            }) {
+            NavigationLink(destination: PaymentScreen(reservationDetails: ReservationRequest(
+                restaurant_id: restaurant.id,
+                slot_id: selectedSlot?.id ?? 0,
+                number_of_guests: guestCount,
+                comments: additionalRequests
+            ))) {
                 Text("Reserve Your Seat")
                     .font(.montserrat(size: 18, weight: .bold))
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(Color.green)
+                    .background(selectedSlot == nil ? Color.gray : Color.green)
                     .cornerRadius(10)
             }
+            .disabled(selectedSlot == nil) // Disable if no slot is selected
             .padding(.top, 10)
         }
         .padding()
         .onAppear {
             // Call API immediately when the view appears
-            viewModel.fetchAvailableSlots(for: restaurant.id, guests: guestCount)
+            viewModel.fetchAvailableSlots(for: restaurant.id, guests: guestCount, date: selectedDate)
         }
     }
 }

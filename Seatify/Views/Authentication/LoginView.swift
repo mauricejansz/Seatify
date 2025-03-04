@@ -104,7 +104,7 @@ struct LoginView: View {
     }
 
     private func loginUser() {
-        guard let url = URL(string: "http://localhost:8000/accounts/api/login/") else {
+        guard let url = URL(string: "\(AppConfig.backendURL)/accounts/api/login/") else {
             errorMessage = "Invalid URL"
             return
         }

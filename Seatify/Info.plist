@@ -6,5 +6,7 @@
 	<array>
 		<string>Montserrat.ttf</string>
 	</array>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>We need your location to show nearby restaurants.</string>
 </dict>
 </plist>

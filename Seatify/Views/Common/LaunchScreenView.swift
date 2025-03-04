@@ -26,6 +26,9 @@ struct LaunchScreenView: View {
                 determineAppState()
             }
         }
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            Color.clear.frame(height: 20) // Adds padding at the bottom to prevent cutoff
+        }
     }
 
     private func determineAppState() {
@@ -44,7 +47,7 @@ struct LaunchScreenView: View {
     }
 
     private func validateToken(accessToken: String, completion: @escaping (Bool) -> Void) {
-        guard let url = URL(string: "http://localhost:8000/accounts/api/validate-token/") else {
+        guard let url = URL(string: "\(AppConfig.backendURL)/accounts/api/validate-token/") else {
             completion(false)
             return
         }

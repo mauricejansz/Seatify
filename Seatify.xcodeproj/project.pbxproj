@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		7C6A286C2D74E0DA00189DC7 /* GoogleMaps in Frameworks */ = {isa = PBXBuildFile; productRef = 7C6A286B2D74E0DA00189DC7 /* GoogleMaps */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		7C86100D2D402CE9005DB689 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -65,6 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7C6A286C2D74E0DA00189DC7 /* GoogleMaps in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -125,6 +130,7 @@
 			);
 			name = Seatify;
 			packageProductDependencies = (
+				7C6A286B2D74E0DA00189DC7 /* GoogleMaps */,
 			);
 			productName = Seatify;
 			productReference = 7C860FF72D402CE8005DB689 /* Seatify.app */;
@@ -208,6 +214,9 @@
 			);
 			mainGroup = 7C860FEE2D402CE8005DB689;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				7C6A286A2D74E0DA00189DC7 /* XCRemoteSwiftPackageReference "ios-maps-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 7C860FF82D402CE8005DB689 /* Products */;
 			projectDirPath = "";
@@ -409,6 +418,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Seatify/Preview Content\"";
+				DEVELOPMENT_TEAM = 6B3S77X3W2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Seatify/Info.plist;
@@ -438,6 +448,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Seatify/Preview Content\"";
+				DEVELOPMENT_TEAM = 6B3S77X3W2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Seatify/Info.plist;
@@ -567,6 +578,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		7C6A286A2D74E0DA00189DC7 /* XCRemoteSwiftPackageReference "ios-maps-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googlemaps/ios-maps-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.3.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		7C6A286B2D74E0DA00189DC7 /* GoogleMaps */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7C6A286A2D74E0DA00189DC7 /* XCRemoteSwiftPackageReference "ios-maps-sdk" */;
+			productName = GoogleMaps;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 7C860FEF2D402CE8005DB689 /* Project object */;
 }

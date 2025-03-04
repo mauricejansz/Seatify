@@ -16,66 +16,120 @@ struct HomeView: View {
     @StateObject private var viewModel = HomeViewModel()
     
     var body: some View {
-        VStack {
-            // Header
-            HStack {
-                Text("Good Evening, \(username)!")
-                    .font(.montserrat(size: 20, weight: .bold))
-                    .padding(.leading, 20)
-                Spacer()
-                NavigationLink(destination: UserProfileView(isLoggedIn: $isLoggedIn, appState: $appState)) {
-                                        Image("user")
-                                            .resizable()
-                                            .frame(width: 40, height: 40)
-                                            .padding(.trailing, 20)
-                                    }
-            }
-            .padding(.top, 40)
-            .onAppear {
-                if let savedUsername = UserDefaults.standard.string(forKey: "username") {
-                    username = savedUsername
-                }
-            }
-            
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 18) {
-                    if viewModel.restaurants.isEmpty {
-                        Text("No restaurants available")
-                            .font(.montserrat(size: 16))
-                            .foregroundColor(.gray)
-                            .padding()
-                    } else {
-                        ForEach(viewModel.restaurants) { restaurant in
-                            NavigationLink(destination: RestaurantDetailView(restaurant: restaurant)) {
-                                RestaurantCard(restaurant: restaurant)
-                                    .frame(width: 250, height: 320) // Ensure a fixed height
-                            }
-                        }
+        GeometryReader { geometry in
+            VStack {
+                HStack {
+                    Text("Good Evening, \(username)!")
+                        .font(.montserrat(size: 20, weight: .bold))
+                        .padding(.leading, 20)
+                    Spacer()
+                    NavigationLink(destination: UserProfileView(isLoggedIn: $isLoggedIn, appState: $appState)) {
+                        Image("user")
+                            .resizable()
+                            .frame(width: 40, height: 40)
+                            .padding(.trailing, 20)
                     }
                 }
-                .padding(.horizontal)
+                .padding(.top, 40)
+                .onAppear {
+                    if let savedUsername = UserDefaults.standard.string(forKey: "username") {
+                        username = savedUsername
+                    }
+                }
+
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 20) {
+                    
+                        // Restaurants Scroll View
+                        Text("Browse by Restaurant")
+                            .font(.montserrat(size: 18, weight: .bold))
+                            .padding(.leading)
+
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 18) {
+                                if viewModel.restaurants.isEmpty {
+                                    Text("No restaurants available")
+                                        .font(.montserrat(size: 16))
+                                        .foregroundColor(.gray)
+                                        .padding()
+                                } else {
+                                    ForEach(viewModel.restaurants) { restaurant in
+                                        NavigationLink(destination: RestaurantDetailView(restaurant: restaurant)) {
+                                            RestaurantCard(restaurant: restaurant)
+                                                .frame(width: 250, height: 320)
+                                        }
+                                    }
+                                }
+                            }
+                            .padding(.horizontal)
+                        }
+                        .frame(height: 370)
+
+                        // Browse by Cuisine Section
+                        Text("Browse by Cuisine")
+                            .font(.montserrat(size: 18, weight: .bold))
+                            .padding(.leading)
+
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 16) {
+                                ForEach(viewModel.cuisines) { cuisine in
+                                    VStack {
+                                        if let uiImage = cuisine.image {
+                                            Image(uiImage: uiImage)
+                                                .resizable()
+                                                .aspectRatio(contentMode: .fill)
+                                                .frame(width: 100, height: 100)
+                                                .clipShape(Circle())
+                                                .overlay(Circle().stroke(Color.gray, lineWidth: 1))
+                                                .shadow(radius: 3)
+                                        } else {
+                                            Circle()
+                                                .fill(Color.gray.opacity(0.3))
+                                                .frame(width: 80, height: 80)
+                                                .overlay(Text("No Image").foregroundColor(.white))
+                                        }
+                                        
+                                        Text(cuisine.name)
+                                            .font(.montserrat(size: 14))
+                                            .foregroundColor(.black)
+                                            .multilineTextAlignment(.center)
+                                    }
+                                }
+                            }
+                            .padding(.horizontal)
+                        }
+
+                        // Recent Bookings Section
+                        if !viewModel.recentBookings.isEmpty {
+                            Text("Recent Bookings")
+                                .font(.montserrat(size: 18, weight: .bold))
+                                .padding(.leading)
+                            
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack(spacing: 16) {
+                                    ForEach(viewModel.recentBookings) { restaurant in
+                                        NavigationLink(destination: RestaurantDetailView(restaurant: restaurant)) {
+                                            RestaurantCard(restaurant: restaurant)
+                                                .frame(width: 250, height: 320)
+                                        }
+                                    }
+                                }
+                                .padding(.horizontal)
+                            }
+                            .frame(height: 370)
+                        }
+                    }
+                    .padding(.bottom, 20) // Ensure spacing at bottom
+                }
+                .frame(height: geometry.size.height - 180) // Set max height for the scroll view
             }
-            .frame(height: 370)
-            
-            Spacer()
         }
         .background(Color("BackgroundColor"))
         .edgesIgnoringSafeArea(.bottom)
         .onAppear {
             viewModel.fetchRestaurants()
-        }
-    }
-    func logout() {
-        print("Logging out...")
-        
-        KeychainHelper.deleteToken(for: "accessToken")
-        KeychainHelper.deleteToken(for: "refreshToken")
-        UserDefaults.standard.removeObject(forKey: "username")
-        UserDefaults.standard.set(false, forKey: "isLoggedIn")
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            appState = .login
-            print("AppState updated to login")
+            viewModel.fetchCuisines()
+            viewModel.fetchRecentBookings()
         }
     }
 }
@@ -98,7 +152,8 @@ struct HomeView_Previews: PreviewProvider {
                 is_published: true,
                 latitude: 6.9271,
                 longitude: 79.8612,
-                image_data: nil
+                image_data: nil,
+                review_count: 5
             ),
             Restaurant(
                 id: 2,
@@ -113,7 +168,8 @@ struct HomeView_Previews: PreviewProvider {
                 is_published: true,
                 latitude: 6.9244,
                 longitude: 79.8643,
-                image_data: nil
+                image_data: nil,
+                review_count: 20
             )
         ]
         

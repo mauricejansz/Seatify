@@ -183,7 +183,7 @@ struct SignUpView: View {
         isLoading = true
         errorMessage = nil
 
-        guard let url = URL(string: "http://127.0.0.1:8000/accounts/api/signup/") else {
+        guard let url = URL(string: "\(AppConfig.backendURL)/accounts/api/signup/") else {
             errorMessage = "Invalid URL"
             isLoading = false
             return

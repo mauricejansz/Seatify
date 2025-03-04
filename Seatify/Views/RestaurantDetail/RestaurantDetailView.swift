@@ -12,9 +12,9 @@ struct RestaurantDetailView: View {
     @State private var selectedTab: Int = 0
     
     var body: some View {
-            
         ScrollView {
             VStack(alignment: .leading) {
+                // 🔹 Restaurant Image
                 if let image = restaurant.image {
                     Image(uiImage: image)
                         .resizable()
@@ -33,34 +33,37 @@ struct RestaurantDetailView: View {
                     Text(restaurant.name)
                         .font(.montserrat(size: 22, weight: .bold))
                     
+                    // 🔹 Address
                     HStack {
                         Image("location")
                             .resizable()
                             .frame(width: 18, height: 18)
                         Text(restaurant.address)
                             .font(.montserrat(size: 14))
-                            .foregroundColor(.gray)
+                            .foregroundColor(Color("PrimaryFont"))
                     }
                     
+                    // 🔹 Rating
                     HStack {
                         Image("star")
                             .resizable()
                             .frame(width: 18, height: 18)
-                        
-                        Text("\(String(format: "%.1f", restaurant.rating))") // Placeholder
+                        Text("\(String(format: "%.1f", restaurant.rating))")
                             .font(.montserrat(size: 14))
-                            .foregroundColor(.gray)
+                            .foregroundColor(Color("PrimaryFont"))
                     }
+                    
+                    // 🔹 Review Count
                     HStack {
                         Image("comment")
                             .resizable()
                             .frame(width: 18, height: 18)
-                        
-                        Text("\(String(format: "%.0f", restaurant.rating)) Reviews") // Placeholder
+                        Text("\(restaurant.review_count) \(restaurant.review_count == 1 ? "Review" : "Reviews")")
                             .font(.montserrat(size: 14))
-                            .foregroundColor(.gray)
+                            .foregroundColor(Color("PrimaryFont"))
                     }
                     
+                    // 🔹 Cuisine Type
                     HStack {
                         Text(restaurant.cuisine)
                             .font(.montserrat(size: 14))
@@ -69,7 +72,6 @@ struct RestaurantDetailView: View {
                             .padding(.vertical, 4)
                             .background(Color("PrimaryAccent"))
                             .cornerRadius(99)
-                        
                         Spacer()
                     }
                 }
@@ -79,20 +81,118 @@ struct RestaurantDetailView: View {
                 
                 Divider()
                 
-                // Render respective tab content
+                // 🔹 Tab Content
                 if selectedTab == 0 {
-                    RestaurantReservationView(restaurant: restaurant)
+                    RestaurantReservationTabView(restaurant: restaurant)
                 } else if selectedTab == 1 {
-                    RestaurantMenuView(restaurantId: restaurant.id)
+                    RestaurantMenuTabView(restaurantId: restaurant.id)
                 } else if selectedTab == 2 {
-                    RestaurantReviewView(restaurantId: restaurant.id)
+                    RestaurantReviewTabView(restaurantId: restaurant.id)
                 } else if selectedTab == 3 {
-                    Text("📜 Details - Coming Soon...")
-                        .font(.montserrat(size: 18))
-                        .padding()
+                    restaurantDetailsView()
                 }
             }
         }
         .navigationBarTitle(restaurant.name, displayMode: .inline)
+    }
+    
+    // 🔹 Restaurant Details Tab Content
+    // 🔹 Restaurant Details Tab Content
+    // 🔹 Restaurant Details Tab Content
+    private func restaurantDetailsView() -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            
+            // 🔹 Description Section (Fixed Alignment)
+            HStack(alignment: .top, spacing: 6) {
+                Image("description")
+                    .resizable()
+                    .frame(width: 18, height: 18)
+                    .foregroundColor(Color("PrimaryFont"))
+                
+                Text(restaurant.description)
+                    .font(.montserrat(size: 14))
+                    .foregroundColor(Color("PrimaryFont"))
+                    .fixedSize(horizontal: false, vertical: true) // Ensures proper wrapping
+            }
+            .padding(.horizontal)
+
+            // 🔹 Address
+            HStack {
+                Image("location")
+                    .resizable()
+                    .frame(width: 18, height: 18)
+                    .foregroundColor(Color("PrimaryFont"))
+                Text(restaurant.address)
+                    .font(.montserrat(size: 14))
+                    .foregroundColor(Color("PrimaryFont"))
+            }
+            .padding(.horizontal)
+
+            // 🔹 Phone Number (Click to Call)
+            HStack {
+                Image("phone")
+                    .resizable()
+                    .frame(width: 18, height: 18)
+                    .foregroundColor(Color("PrimaryAccent"))
+                if let phoneURL = URL(string: "tel://\(restaurant.phone)"), UIApplication.shared.canOpenURL(phoneURL) {
+                    Link(restaurant.phone, destination: phoneURL)
+                        .font(.montserrat(size: 14))
+                        .foregroundColor(Color("PrimaryFont"))
+                } else {
+                    Text(restaurant.phone)
+                        .font(.montserrat(size: 14))
+                        .foregroundColor(Color("PrimaryFont"))
+                }
+            }
+            .padding(.horizontal)
+
+            // 🔹 Price Range
+            HStack {
+                Image("dollar")
+                    .resizable()
+                    .frame(width: 18, height: 18)
+                    .foregroundColor(Color("PrimaryAccent"))
+                Text("Rs. \(String(format: "%.0f", restaurant.lowest_price)) - Rs. \(String(format: "%.0f", restaurant.highest_price))")
+                    .font(.montserrat(size: 14))
+                    .foregroundColor(Color("PrimaryFont"))
+            }
+            .padding(.horizontal)
+
+            RestaurantMapView(latitude: restaurant.latitude, longitude: restaurant.longitude, title: restaurant.name)
+                .frame(height: 200)
+                .cornerRadius(10)
+                .shadow(radius: 2)
+                .padding(.horizontal)
+
+            // 🔹 Get Directions Button
+            Button(action: openGoogleMaps) {
+                Text("Get Directions")
+                    .font(.montserrat(size: 18, weight: .bold))
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color("PrimaryAccent"))
+                    .cornerRadius(10)
+            }
+            .padding(.horizontal)
+            .padding(.top, 10)
+
+            Spacer()
+        }
+        .padding(.top, 10)
+    }
+    private func openGoogleMaps() {
+        let latitude = restaurant.latitude
+        let longitude = restaurant.longitude
+        let urlString = "comgooglemaps://?daddr=\(latitude),\(longitude)&directionsmode=driving"
+        
+        if let googleMapsURL = URL(string: urlString), UIApplication.shared.canOpenURL(googleMapsURL) {
+            UIApplication.shared.open(googleMapsURL)
+        } else {
+            // Open in browser if Google Maps is not installed
+            if let webURL = URL(string: "https://www.google.com/maps/dir/?api=1&destination=\(latitude),\(longitude)") {
+                UIApplication.shared.open(webURL)
+            }
+        }
     }
 }

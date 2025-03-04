@@ -22,6 +22,7 @@ struct Restaurant: Codable, Identifiable {
     let latitude: Double
     let longitude: Double
     let image_data: String? // Base64 encoded string
+    let review_count: Int
 
     // Convert Base64 to UIImage
     var image: UIImage? {

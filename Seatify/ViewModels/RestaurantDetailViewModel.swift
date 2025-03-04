@@ -8,20 +8,24 @@
 import SwiftUI
 
 class RestaurantDetailViewModel: ObservableObject {
-    @Published var availableSlots: [String] = []
+    @Published var availableSlots: [SlotResponse] = []
     @Published var isLoading = false
     @Published var errorMessage: String?
 
-    func fetchAvailableSlots(for restaurantId: Int, guests: Int) {
+    func fetchAvailableSlots(for restaurantId: Int, guests: Int, date: Date) {
         isLoading = true
         errorMessage = nil
-
-        guard let url = URL(string: "http://127.0.0.1:8000/api/restaurants/\(restaurantId)/slots/?guests=\(guests)") else {
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"  // Format to match backend
+        let formattedDate = dateFormatter.string(from: date)
+        
+        guard let url = URL(string: "\(AppConfig.backendURL)/api/restaurants/\(restaurantId)/slots/?guests=\(guests)&date=\(formattedDate)") else {
             errorMessage = "Invalid URL"
             isLoading = false
             return
         }
-
+        
         var request = URLRequest(url: url)
         if let accessToken = KeychainHelper.retrieveToken(for: "accessToken") {
             request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
@@ -40,7 +44,7 @@ class RestaurantDetailViewModel: ObservableObject {
                 }
                 do {
                     let decodedSlots = try JSONDecoder().decode([SlotResponse].self, from: data)
-                    self.availableSlots = decodedSlots.map { $0.time }
+                    self.availableSlots = decodedSlots // Store full objects
                 } catch {
                     self.errorMessage = "Failed to decode response"
                 }
