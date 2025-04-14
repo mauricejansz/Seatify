@@ -12,8 +12,8 @@ struct SavedView: View {
     @State private var searchText: String = ""
 
     var body: some View {
-        VStack {
-            // Search Bar
+        VStack(spacing: 0) {
+            // Search Bar - Stuck to the top
             HStack {
                 TextField("Search", text: $searchText)
                     .padding(10)
@@ -30,13 +30,18 @@ struct SavedView: View {
                 }
             }
             .padding(.horizontal)
+            .padding(.vertical, 8)
+            .background(Color.white) // Ensure the search bar stays visible
+            .zIndex(1) // Ensure it's above the scroll view
 
-            // List of Saved Restaurants
+            // Saved Restaurants Section
             if viewModel.savedRestaurants.isEmpty {
+                Spacer()
                 Text("No saved restaurants")
                     .font(.montserrat(size: 16))
                     .foregroundColor(.gray)
                     .padding()
+                Spacer()
             } else {
                 ScrollView {
                     VStack(spacing: 10) {
@@ -45,6 +50,7 @@ struct SavedView: View {
                         }
                     }
                     .padding(.horizontal)
+                    .padding(.top, 10) // Prevents content from sticking under the search bar
                 }
             }
         }
