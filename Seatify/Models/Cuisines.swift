@@ -7,13 +7,12 @@
 import Foundation
 import SwiftUI
 
-struct Cuisine: Identifiable, Codable {
+struct Cuisine: Identifiable, Codable, Hashable {
     let id: Int
     let name: String
-    let image_data: String? // Base64 encoded image
+    let image_data: String?
     let keyword: String
 
-    // Convert Base64 to UIImage
     var image: UIImage? {
         guard let imageData = Data(base64Encoded: image_data ?? "", options: .ignoreUnknownCharacters) else {
             return nil

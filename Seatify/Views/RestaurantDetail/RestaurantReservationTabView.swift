@@ -12,13 +12,14 @@ struct RestaurantReservationTabView: View {
     @StateObject private var viewModel = RestaurantDetailViewModel()
     @State private var selectedDate: Date = Date()
     @State private var guestCount: Int = 2
-    @State private var selectedSlot: SlotResponse? = nil // Store full SlotResponse object
+    @State private var selectedSlot: SlotResponse? = nil
     @State private var additionalRequests: String = ""
     
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text("Date")
                 .font(.montserrat(size: 16, weight: .bold))
+                .foregroundColor(Color("PrimaryFont"))
             
             HStack {
                 DatePicker("", selection: $selectedDate, displayedComponents: .date)
@@ -31,6 +32,7 @@ struct RestaurantReservationTabView: View {
             
             Text("Guests")
                 .font(.montserrat(size: 16, weight: .bold))
+                .foregroundColor(Color("PrimaryFont"))
             
             HStack {
                 Button(action: {
@@ -46,6 +48,7 @@ struct RestaurantReservationTabView: View {
                 Text("\(guestCount)")
                     .font(.montserrat(size: 16))
                     .frame(width: 40, alignment: .center)
+                    .foregroundColor(Color("PrimaryFont"))
                 
                 Button(action: {
                     guestCount += 1
@@ -58,6 +61,7 @@ struct RestaurantReservationTabView: View {
             
             Text("Available Slots")
                 .font(.montserrat(size: 16, weight: .bold))
+                .foregroundColor(Color("PrimaryFont"))
 
             if viewModel.isLoading {
                 ProgressView()
@@ -88,9 +92,11 @@ struct RestaurantReservationTabView: View {
             
             Text("Comments")
                 .font(.montserrat(size: 16, weight: .bold))
+                .foregroundColor(Color("PrimaryFont"))
             
             TextField("Additional Requests...", text: $additionalRequests)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
+                .background(Color("BackgroundColor"))
             
             NavigationLink(destination: PaymentScreen(reservationDetails: ReservationRequest(
                 restaurant_id: restaurant.id,
@@ -106,12 +112,11 @@ struct RestaurantReservationTabView: View {
                     .background(selectedSlot == nil ? Color.gray : Color.green)
                     .cornerRadius(10)
             }
-            .disabled(selectedSlot == nil) // Disable if no slot is selected
+            .disabled(selectedSlot == nil)
             .padding(.top, 10)
         }
         .padding()
         .onAppear {
-            // Call API immediately when the view appears
             viewModel.fetchAvailableSlots(for: restaurant.id, guests: guestCount, date: selectedDate)
         }
     }

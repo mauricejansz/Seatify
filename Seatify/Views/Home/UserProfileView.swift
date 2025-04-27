@@ -10,57 +10,67 @@ import SwiftUI
 struct UserProfileView: View {
     @Binding var isLoggedIn: Bool
     @Binding var appState: AppState
-    @Environment(\.dismiss) var dismiss  // Used to dismiss the modal
+    @Environment(\.dismiss) var dismiss
+    @State private var showEditProfile = false
+    @State private var showAbout = false
+    @State private var showTerms = false
 
     var body: some View {
-        VStack {
-            Spacer().frame(height: 50)
-            
+        VStack(spacing: 20) {
+            Spacer().frame(height: 40)
+
             Image(systemName: "person.circle.fill")
                 .resizable()
                 .frame(width: 100, height: 100)
-                .foregroundColor(.green)
-                .padding()
-            
+                .foregroundColor(Color("PrimaryAccent"))
+
             Text("Maurice Jansz")
-                .font(.montserrat(size: 20, weight: .bold))
-                .padding(.top, 10)
-            
-            Button(action: {
-                logoutUser()
-            }) {
-                Text("Logout")
-                    .font(.montserrat(size: 18, weight: .bold))
-                    .foregroundColor(.red)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(Color.white)
-                    .cornerRadius(10)
-                    .shadow(color: Color.red.opacity(0.5), radius: 5, x: 0, y: 2)
+                .font(.montserrat(size: 18, weight: .bold))
+
+            Group {
+                NavigationLink(destination: EditProfileView(), isActive: $showEditProfile) {
+                    EmptyView()
+                }
+                ButtonView(label: "Edit Profile", systemImage: "square.and.pencil") {
+                    showEditProfile = true
+                }
+
+                ButtonView(label: "About Us", systemImage: "info.circle") {
+                    showAbout = true
+                }
+                .sheet(isPresented: $showAbout) {
+                    AboutUsView()
+                }
+
+                ButtonView(label: "Terms & Conditions", systemImage: "doc.text") {
+                    showTerms = true
+                }
+                .sheet(isPresented: $showTerms) {
+                    TermsView()
+                }
             }
-            .padding(.horizontal, 20)
-            .padding(.bottom, 40)
+
+            Spacer()
+
+            Button(action: logoutUser) {
+                Text("Logout")
+                    .font(.montserrat(size: 16, weight: .bold))
+                    .foregroundColor(Color("PrimaryAccent"))
+            }
+            .padding(.bottom, 20)
         }
-        .background(Color("BackgroundColor"))
-        .edgesIgnoringSafeArea(.all)
+        .padding()
+        .background(Color.white)
+        .navigationTitle("User Page")
+        .navigationBarTitleDisplayMode(.inline)
     }
-    
+
     private func logoutUser() {
-        print("Logging out user...")
-        print("Stored username before logout: \(UserDefaults.standard.string(forKey: "username") ?? "None")")
-        
         KeychainHelper.deleteToken(for: "accessToken")
         KeychainHelper.deleteToken(for: "refreshToken")
-        UserDefaults.standard.set(false, forKey: "isLoggedIn")
         UserDefaults.standard.removeObject(forKey: "username")
-        
-        // Use a slight delay to ensure state updates then dismiss the view
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            isLoggedIn = false
-            appState = .login  // This will make your ContentView show LoginView
-            dismiss()        // Dismiss the modal view
-        }
-        
-        print("Logout complete. App state updated to login.")
+        isLoggedIn = false
+        appState = .login
+        dismiss()
     }
 }

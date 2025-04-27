@@ -13,7 +13,6 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
-        // ✅ Set the Google Maps API Key Here
         GMSServices.provideAPIKey("AIzaSyDlFwmojUTREwhFfTPBvyXzY30Uilrx0N8")
         
         return true

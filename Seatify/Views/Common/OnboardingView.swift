@@ -23,9 +23,8 @@ struct OnboardingView: View {
 
                 Spacer()
 
-                // Get Started Button
                 Button(action: {
-                    onGetStarted() // Trigger the action passed in
+                    onGetStarted()
                 }) {
                     Text("Get Started")
                         .font(.montserrat(size: 18, weight: .bold))

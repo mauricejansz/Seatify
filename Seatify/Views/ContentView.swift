@@ -32,7 +32,7 @@ struct ContentView: View {
                     },
                     onLoginSuccess: { loggedInUsername in
                         username = loggedInUsername
-                        UserDefaults.standard.set(loggedInUsername, forKey: "username") // Save username
+                        UserDefaults.standard.set(loggedInUsername, forKey: "username")
                         isLoggedIn = true
                         appState = .home
                     }
@@ -48,7 +48,6 @@ struct ContentView: View {
             }
         }
         .onAppear {
-            // Restore login state
             if let savedUsername = UserDefaults.standard.string(forKey: "username") {
                 username = savedUsername
                 isLoggedIn = true

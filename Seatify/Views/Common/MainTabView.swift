@@ -20,13 +20,13 @@ struct MainTabView: View {
                     .tabItem {
                         VStack {
                             Image("home_menu")
-                                .renderingMode(.template) // Ensure it respects color changes
+                                .renderingMode(.template)
                             Text("Home")
                         }
                     }
                     .tag(0)
                 
-                SearchView()
+                SearchView(initialQuery: "")
                     .tabItem {
                         VStack {
                             Image("search_menu")

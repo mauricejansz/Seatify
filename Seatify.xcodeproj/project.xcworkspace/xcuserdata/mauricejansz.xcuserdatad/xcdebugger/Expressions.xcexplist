@@ -3,29 +3,21 @@
    version = "1.0">
    <ContextStates>
       <ContextState
-         contextName = "closure #1 in closure #1 in closure #1 in closure #1 in MainTabView.body.getter:MainTabView.swift">
+         contextName = "closure #2 in closure #1 in closure #1 in RestaurantReviewTabView.body.getter:RestaurantReviewTabView.swift">
          <PersistentStrings>
             <PersistentString
-               value = "selectedTab">
+               value = "currentUserId">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "closure #1 in closure #1 in closure #1 in HomeView.body.getter:HomeView.swift">
+         contextName = "closure #1 in closure #1 in RestaurantDetailViewModel.fetchAvailableSlots(for:guests:):RestaurantDetailViewModel.swift">
          <PersistentStrings>
             <PersistentString
-               value = "username">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "RestaurantMapView.makeUIView(context:):RestaurantMapView.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "longitude">
+               value = "decodedSlots">
             </PersistentString>
             <PersistentString
-               value = "latitude">
+               value = "JSONDecoder().decode([SlotResponse].self, from: data">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -38,26 +30,10 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "static KeychainHelper.retrieveToken(for:):KeychainHelper.swift">
+         contextName = "EditProfileView.updateProfile():EditProfileView.swift">
          <PersistentStrings>
             <PersistentString
-               value = "data">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "closure #1 in HomeView.logout():HomeView.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "appState">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "closure #1 in RestaurantDetailView.restaurantDetailsView():RestaurantDetailView.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "restaurant.latitude">
+               value = "accessToken">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -66,6 +42,17 @@
          <PersistentStrings>
             <PersistentString
                value = "restaurant.review_count">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "RestaurantMapView.makeUIView(context:):RestaurantMapView.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "longitude">
+            </PersistentString>
+            <PersistentString
+               value = "latitude">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -84,21 +71,76 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "closure #1 in closure #1 in RestaurantDetailViewModel.fetchAvailableSlots(for:guests:):RestaurantDetailViewModel.swift">
+         contextName = "closure #1 in SearchViewModel.filterResults():SearchViewModel.swift">
          <PersistentStrings>
             <PersistentString
-               value = "decodedSlots">
+               value = "cuisineName.contains(trimmed)">
             </PersistentString>
             <PersistentString
-               value = "JSONDecoder().decode([SlotResponse].self, from: data">
+               value = "menuMatches">
+            </PersistentString>
+            <PersistentString
+               value = "matchedCuisine&#10;">
+            </PersistentString>
+            <PersistentString
+               value = "restaurantName.contains(trimmed)">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "closure #2 in closure #1 in closure #1 in RestaurantReviewTabView.body.getter:RestaurantReviewTabView.swift">
+         contextName = "closure #1 in closure #1 in closure #1 in closure #1 in MainTabView.body.getter:MainTabView.swift">
          <PersistentStrings>
             <PersistentString
-               value = "currentUserId">
+               value = "selectedTab">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in RestaurantDetailView.restaurantDetailsView():RestaurantDetailView.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "restaurant.latitude">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in closure #1 in closure #1 in HomeView.body.getter:HomeView.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "username">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in LoginView.loginUser():LoginView.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "user[&quot;first_name&quot;]">
+            </PersistentString>
+            <PersistentString
+               value = "user[&quot;last_name&quot;]">
+            </PersistentString>
+            <PersistentString
+               value = "user[&quot;phone_number&quot;]">
+            </PersistentString>
+            <PersistentString
+               value = "first_name">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in HomeView.logout():HomeView.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "appState">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "static KeychainHelper.retrieveToken(for:):KeychainHelper.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "data">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

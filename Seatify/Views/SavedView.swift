@@ -9,39 +9,20 @@ import SwiftUI
 
 struct SavedView: View {
     @StateObject private var viewModel = SavedViewModel()
-    @State private var searchText: String = ""
 
     var body: some View {
-        VStack(spacing: 0) {
-            // Search Bar - Stuck to the top
-            HStack {
-                TextField("Search", text: $searchText)
-                    .padding(10)
-                    .background(Color(.systemGray6))
-                    .cornerRadius(8)
-                    .padding(.leading, 10)
-
-                Button(action: {
-                    // Search functionality to be implemented later
-                }) {
-                    Image(systemName: "magnifyingglass")
-                        .foregroundColor(.gray)
-                        .padding(.trailing, 10)
-                }
-            }
-            .padding(.horizontal)
-            .padding(.vertical, 8)
-            .background(Color.white) // Ensure the search bar stays visible
-            .zIndex(1) // Ensure it's above the scroll view
-
-            // Saved Restaurants Section
+        VStack {
             if viewModel.savedRestaurants.isEmpty {
-                Spacer()
-                Text("No saved restaurants")
-                    .font(.montserrat(size: 16))
-                    .foregroundColor(.gray)
-                    .padding()
-                Spacer()
+                VStack {
+                    Spacer()
+                    Text("No saved restaurants")
+                        .font(.montserrat(size: 16))
+                        .foregroundColor(.gray)
+                        .padding()
+                    Spacer()
+                }
+                .frame(maxHeight: .infinity)
+                .frame(maxWidth: .infinity)
             } else {
                 ScrollView {
                     VStack(spacing: 10) {
@@ -50,7 +31,7 @@ struct SavedView: View {
                         }
                     }
                     .padding(.horizontal)
-                    .padding(.top, 10) // Prevents content from sticking under the search bar
+                    .padding(.top, 10)
                 }
             }
         }
@@ -58,5 +39,6 @@ struct SavedView: View {
         .onAppear {
             viewModel.fetchSavedRestaurants()
         }
+        .background(Color("BackgroundColor").ignoresSafeArea())
     }
 }

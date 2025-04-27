@@ -30,7 +30,7 @@ struct RestaurantMenuTabView: View {
                                 .font(.montserrat(size: 18, weight: .bold))
                                 .padding(.vertical, 5)
                                 .foregroundColor(.black)
-                            let items = viewModel.menu[category] ?? [] // Cache items first
+                            let items = viewModel.menu[category] ?? []
 
                             VStack(spacing: 12) {
                                 ForEach(items, id: \.id) { item in

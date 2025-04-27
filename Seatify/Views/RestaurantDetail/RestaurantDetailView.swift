@@ -14,7 +14,6 @@ struct RestaurantDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
-                // 🔹 Restaurant Image
                 if let image = restaurant.image {
                     Image(uiImage: image)
                         .resizable()
@@ -28,12 +27,11 @@ struct RestaurantDetailView: View {
                         .overlay(Text("No Image").foregroundColor(.white))
                 }
                 
-                // 🔹 Restaurant Details
                 VStack(alignment: .leading, spacing: 8) {
                     Text(restaurant.name)
                         .font(.montserrat(size: 22, weight: .bold))
+                        .foregroundColor(Color("PrimaryFont"))
                     
-                    // 🔹 Address
                     HStack {
                         Image("location")
                             .resizable()
@@ -43,7 +41,6 @@ struct RestaurantDetailView: View {
                             .foregroundColor(Color("PrimaryFont"))
                     }
                     
-                    // 🔹 Rating
                     HStack {
                         Image("star")
                             .resizable()
@@ -53,7 +50,6 @@ struct RestaurantDetailView: View {
                             .foregroundColor(Color("PrimaryFont"))
                     }
                     
-                    // 🔹 Review Count
                     HStack {
                         Image("comment")
                             .resizable()
@@ -63,9 +59,8 @@ struct RestaurantDetailView: View {
                             .foregroundColor(Color("PrimaryFont"))
                     }
                     
-                    // 🔹 Cuisine Type
                     HStack {
-                        Text(restaurant.cuisine)
+                        Text(restaurant.cuisine.name)
                             .font(.montserrat(size: 14))
                             .foregroundColor(Color("SecondaryAccent"))
                             .padding(.horizontal, 10)
@@ -81,7 +76,6 @@ struct RestaurantDetailView: View {
                 
                 Divider()
                 
-                // 🔹 Tab Content
                 if selectedTab == 0 {
                     RestaurantReservationTabView(restaurant: restaurant)
                 } else if selectedTab == 1 {
@@ -94,15 +88,12 @@ struct RestaurantDetailView: View {
             }
         }
         .navigationBarTitle(restaurant.name, displayMode: .inline)
+        .background(Color("BackgroundColor"))
     }
     
-    // 🔹 Restaurant Details Tab Content
-    // 🔹 Restaurant Details Tab Content
-    // 🔹 Restaurant Details Tab Content
     private func restaurantDetailsView() -> some View {
         VStack(alignment: .leading, spacing: 10) {
             
-            // 🔹 Description Section (Fixed Alignment)
             HStack(alignment: .top, spacing: 6) {
                 Image("description")
                     .resizable()
@@ -112,11 +103,10 @@ struct RestaurantDetailView: View {
                 Text(restaurant.description)
                     .font(.montserrat(size: 14))
                     .foregroundColor(Color("PrimaryFont"))
-                    .fixedSize(horizontal: false, vertical: true) // Ensures proper wrapping
+                    .fixedSize(horizontal: false, vertical: true)
             }
             .padding(.horizontal)
 
-            // 🔹 Address
             HStack {
                 Image("location")
                     .resizable()
@@ -128,7 +118,6 @@ struct RestaurantDetailView: View {
             }
             .padding(.horizontal)
 
-            // 🔹 Phone Number (Click to Call)
             HStack {
                 Image("phone")
                     .resizable()
@@ -146,7 +135,6 @@ struct RestaurantDetailView: View {
             }
             .padding(.horizontal)
 
-            // 🔹 Price Range
             HStack {
                 Image("dollar")
                     .resizable()
@@ -164,7 +152,6 @@ struct RestaurantDetailView: View {
                 .shadow(radius: 2)
                 .padding(.horizontal)
 
-            // 🔹 Get Directions Button
             Button(action: openGoogleMaps) {
                 Text("Get Directions")
                     .font(.montserrat(size: 18, weight: .bold))
@@ -189,7 +176,6 @@ struct RestaurantDetailView: View {
         if let googleMapsURL = URL(string: urlString), UIApplication.shared.canOpenURL(googleMapsURL) {
             UIApplication.shared.open(googleMapsURL)
         } else {
-            // Open in browser if Google Maps is not installed
             if let webURL = URL(string: "https://www.google.com/maps/dir/?api=1&destination=\(latitude),\(longitude)") {
                 UIApplication.shared.open(webURL)
             }

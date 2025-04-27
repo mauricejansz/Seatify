@@ -8,5 +8,7 @@
 	</array>
     <key>NSLocationWhenInUseUsageDescription</key>
     <string>We need your location to show nearby restaurants.</string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>This app uses your location to improve restaurant search results.</string>
 </dict>
 </plist>

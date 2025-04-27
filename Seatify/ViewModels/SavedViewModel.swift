@@ -23,9 +23,6 @@ class SavedViewModel: ObservableObject {
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let data = data {
                 do {
-                    if let jsonString = String(data: data, encoding: .utf8) {
-                        print("📜 Raw JSON Response: \(jsonString)")
-                    }
                     let decodedResponse = try JSONDecoder().decode([Restaurant].self, from: data)
                     DispatchQueue.main.async {
                         self.savedRestaurants = decodedResponse

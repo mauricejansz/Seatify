@@ -8,7 +8,7 @@ import Foundation
 import Security
 
 struct KeychainHelper {
-    static let standard = KeychainHelper() // Define the `standard` property
+    static let standard = KeychainHelper()
 
     func save(_ data: Data, service: String, account: String) {
         let query: [String: Any] = [
@@ -18,10 +18,8 @@ struct KeychainHelper {
             kSecValueData as String: data
         ]
 
-        // Delete any existing item with the same service and account
         SecItemDelete(query as CFDictionary)
 
-        // Add the new item to the keychain
         SecItemAdd(query as CFDictionary, nil)
     }
 
@@ -60,10 +58,8 @@ struct KeychainHelper {
             kSecValueData as String: token.data(using: .utf8)!
         ]
 
-        // Delete any existing item with the same key
         SecItemDelete(query as CFDictionary)
 
-        // Add the new item to the keychain
         SecItemAdd(query as CFDictionary, nil)
     }
 

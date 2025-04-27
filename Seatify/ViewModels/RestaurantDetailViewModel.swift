@@ -17,7 +17,7 @@ class RestaurantDetailViewModel: ObservableObject {
         errorMessage = nil
         
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"  // Format to match backend
+        dateFormatter.dateFormat = "yyyy-MM-dd"
         let formattedDate = dateFormatter.string(from: date)
         
         guard let url = URL(string: "\(AppConfig.backendURL)/api/restaurants/\(restaurantId)/slots/?guests=\(guests)&date=\(formattedDate)") else {
@@ -44,7 +44,7 @@ class RestaurantDetailViewModel: ObservableObject {
                 }
                 do {
                     let decodedSlots = try JSONDecoder().decode([SlotResponse].self, from: data)
-                    self.availableSlots = decodedSlots // Store full objects
+                    self.availableSlots = decodedSlots
                 } catch {
                     self.errorMessage = "Failed to decode response"
                 }

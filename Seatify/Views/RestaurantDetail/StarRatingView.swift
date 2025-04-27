@@ -23,7 +23,7 @@ struct StarRatingView: View {
                     .frame(width: starSize, height: starSize)
                     .onTapGesture {
                         if isSelectable {
-                            onRatingSelected?(Double(index) + 1) // Update rating on tap
+                            onRatingSelected?(Double(index) + 1)
                         }
                     }
             }

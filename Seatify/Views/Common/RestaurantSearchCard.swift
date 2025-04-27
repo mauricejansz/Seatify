@@ -9,83 +9,85 @@ import SwiftUI
 
 struct RestaurantSearchCard: View {
     let restaurant: Restaurant
-    @State private var isBookmarked: Bool = false 
+    @State private var isBookmarked: Bool = false
     
     var body: some View {
-        VStack(alignment: .leading) {
-            HStack {
-                VStack(alignment: .leading, spacing: 5) {
-                    HStack{
-                        Text(restaurant.name)
-                            .font(.montserrat(size: 18, weight: .bold))
-                            .foregroundColor(.black)
-                        Spacer()
+        NavigationLink(destination: RestaurantDetailView(restaurant: restaurant)) {
+            VStack(alignment: .leading) {
+                HStack {
+                    VStack(alignment: .leading, spacing: 5) {
+                        HStack{
+                            Text(restaurant.name)
+                                .font(.montserrat(size: 18, weight: .bold))
+                                .foregroundColor(.black)
+                            Spacer()
+                            
+                            // Bookmark Button
+                            Button(action: {
+                                toggleBookmark()
+                            }) {
+                                Image("bookmark")
+                                    .resizable()
+                                    .renderingMode(.template)
+                                    .frame(width: 24, height: 24)
+                                    .foregroundColor(isBookmarked ? Color("PrimaryAccent") : Color("InactiveColor"))
+                                    .padding(12)
+                            }
+                        }
                         
-                        // Bookmark Button
-                        Button(action: {
-                            toggleBookmark()
-                        }) {
-                            Image("bookmark")
+                        
+                        HStack(spacing: 4) {
+                            Image("location")
                                 .resizable()
-                                .renderingMode(.template)
-                                .frame(width: 24, height: 24)
-                                .foregroundColor(isBookmarked ? Color("PrimaryAccent") : Color("InactiveColor"))
-                                .padding(12)
+                                .frame(width: 12, height: 12)
+                            Text(restaurant.address)
+                                .font(.montserrat(size: 14))
+                                .foregroundColor(Color("PrimaryFont"))
+                                .lineLimit(1)
+                        }
+                        
+                        HStack(spacing: 4) {
+                            Image("directions")
+                                .resizable()
+                                .frame(width: 12, height: 12)
+                            Text("5.2 km Away")
+                                .font(.montserrat(size: 14))
+                                .foregroundColor(Color("PrimaryFont"))
+                        }
+                        
+                        HStack {
+                            Image("star")
+                                .resizable()
+                                .frame(width: 12, height: 12)
+                            Text(String(format: "%.1f", restaurant.rating))
+                                .font(.montserrat(size: 14, weight: .medium))
+                                .foregroundColor(.black)
+                        }
+                        
+                        HStack {
+                            Text(restaurant.cuisine.name)
+                                .font(.montserrat(size: 14))
+                                .foregroundColor(Color("SecondaryAccent"))
+                                .padding(.horizontal, 10)
+                                .padding(.vertical, 4)
+                                .background(Color("PrimaryAccent"))
+                                .cornerRadius(99)
                         }
                     }
                     
                     
-                    HStack(spacing: 4) {
-                        Image("location")
-                            .resizable()
-                            .frame(width: 12, height: 12)
-                        Text(restaurant.address)
-                            .font(.montserrat(size: 14))
-                            .foregroundColor(Color("PrimaryFont"))
-                            .lineLimit(1)
-                    }
-                    
-                    HStack(spacing: 4) {
-                        Image("directions")
-                            .resizable()
-                            .frame(width: 12, height: 12)
-                        Text("5.2 km Away") // Placeholder for distance, can be dynamic
-                            .font(.montserrat(size: 14))
-                            .foregroundColor(Color("PrimaryFont"))
-                    }
-                    
-                    HStack {
-                        Image("star")
-                            .resizable()
-                            .frame(width: 12, height: 12)
-                        Text(String(format: "%.1f", restaurant.rating))
-                            .font(.montserrat(size: 14, weight: .medium))
-                            .foregroundColor(.black)
-                    }
-                    
-                    HStack {
-                        Text(restaurant.cuisine)
-                            .font(.montserrat(size: 14))
-                            .foregroundColor(Color("SecondaryAccent"))
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 4)
-                            .background(Color("PrimaryAccent"))
-                            .cornerRadius(99)
-                    }
                 }
+                .padding()
                 
-                
+                Divider()
+                    .padding(.horizontal, 16)
             }
-            .padding()
-            
-            Divider()
-                .padding(.horizontal, 16)
-        }
-        .background(Color.white)
-        .cornerRadius(10)
-        .shadow(radius: 2)
-        .onAppear {
-            checkIfBookmarked()
+            .background(Color.white)
+            .cornerRadius(10)
+            .shadow(radius: 2)
+            .onAppear {
+                checkIfBookmarked()
+            }
         }
     }
     private func toggleBookmark() {

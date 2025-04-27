@@ -9,7 +9,7 @@ import Foundation
 
 struct SlotResponse: Codable, Identifiable {
     let id: Int
-    let table: String  // This stores the table number
+    let table: String
     let capacity: Int
     let date: String
     let time: String

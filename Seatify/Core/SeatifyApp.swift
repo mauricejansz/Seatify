@@ -15,10 +15,10 @@ struct SeatifyApp: App {
     
     init() {
         UINavigationBar.appearance().largeTitleTextAttributes = [
-            .font: UIFont(name: "Montserrat-Bold", size: 34)!  // Large title
+            .font: UIFont(name: "Montserrat-Bold", size: 34)!
         ]
         UINavigationBar.appearance().titleTextAttributes = [
-            .font: UIFont(name: "Montserrat-Regular", size: 18)!  // Regular title
+            .font: UIFont(name: "Montserrat-Regular", size: 18)!
         ]
     }
     

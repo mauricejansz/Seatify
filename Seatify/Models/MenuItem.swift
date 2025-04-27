@@ -6,12 +6,12 @@
 //
 import Foundation
 
-struct MenuCategory: Codable {
+struct MenuCategory: Codable, Hashable {
     let category: String
     let items: [MenuItem]
 }
 
-struct MenuItem: Codable {
+struct MenuItem: Codable, Hashable {
     let id: Int
     let name: String
     let description: String

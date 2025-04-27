@@ -9,7 +9,7 @@ import SwiftUI
 
 struct RestaurantCard: View {
     let restaurant: Restaurant
-    @State private var isBookmarked: Bool = false // Bookmark state
+    @State private var isBookmarked: Bool = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -32,7 +32,7 @@ struct RestaurantCard: View {
                 HStack {
                     Text(restaurant.name)
                         .font(.montserrat(size: 18, weight: .bold))
-                        .foregroundColor(.black)
+                        .foregroundColor(Color("TextColor"))
                         .lineLimit(1)
 
                     Spacer()
@@ -65,7 +65,7 @@ struct RestaurantCard: View {
 
                     Spacer()
 
-                    Text(restaurant.cuisine)
+                    Text(restaurant.cuisine.name)
                         .font(.montserrat(size: 12))
                         .padding(.horizontal, 10)
                         .padding(.vertical, 5)
@@ -124,31 +124,5 @@ struct RestaurantCard: View {
                 }
             }
         }.resume()
-    }
-}
-
-// MARK: - Preview with Sample Data
-struct RestaurantCard_Previews: PreviewProvider {
-    static var previews: some View {
-        let sampleRestaurant = Restaurant(
-            id: 1,
-            name: "Culture Colombo",
-            description: "A fine dining Sri Lankan restaurant in the heart of the city.",
-            address: "25 Kensington Garden, Colombo 04, Colombo, Sri Lanka",
-            phone: "0761234567",
-            cuisine: "Sri Lankan",
-            rating: 4.8,
-            lowest_price: 500.0,
-            highest_price: 2000.0,
-            is_published: true,
-            latitude: 6.9271,
-            longitude: 79.8612,
-            image_data: nil,
-            review_count: 1
-        )
-        
-        return RestaurantCard(restaurant: sampleRestaurant)
-            .previewLayout(.sizeThatFits)
-            .padding()
     }
 }

@@ -85,7 +85,7 @@ struct VerifyEmailView: View {
                 }
 
                 if httpResponse.statusCode == 200 {
-                    onVerified() // move to login or auto login
+                    onVerified()
                 } else {
                     errorMessage = "Invalid code or verification failed"
                 }

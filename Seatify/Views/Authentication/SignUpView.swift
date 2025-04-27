@@ -22,162 +22,192 @@ struct SignUpView: View {
     @State private var errorMessage: String?
     @State private var showDatePicker = false
     @State private var navigateToVerify = false
+    @StateObject private var keyboard = KeyboardResponder()
 
     var body: some View {
         NavigationStack {
-            VStack {
-                Spacer()
-                    .frame(height: 50)
+            ScrollView {
+                VStack(spacing: 20) {
+                    Spacer()
+                        .frame(height: 30)
 
-                Image("logo")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(height: 80)
-                    .padding(.bottom, 20)
+                    Image("logo")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 80)
+                        .padding(.bottom, 10)
 
-                Text("Welcome to Seatify")
-                    .font(.montserrat(size: 24, weight: .bold))
-                    .padding(.bottom, 5)
+                    Text("Welcome to Seatify")
+                        .font(.montserrat(size: 24, weight: .bold))
 
-                Text("Sign up to start your journey")
-                    .font(.montserrat(size: 14))
-                    .foregroundColor(.gray)
-                    .padding(.bottom, 20)
-
-                ScrollView {
-                    VStack(spacing: 16) {
-                        TextField("Email Address", text: $email)
-                            .autocapitalization(.none)
-                            .disableAutocorrection(true)
-                            .padding()
-                            .background(Color("InputFieldBackground"))
-                            .cornerRadius(8)
-
-                        TextField("Username", text: $username)
-                            .autocapitalization(.none)
-                            .disableAutocorrection(true)
-                            .padding()
-                            .background(Color("InputFieldBackground"))
-                            .cornerRadius(8)
-
-                        SecureField("Password", text: $password)
-                            .autocapitalization(.none)
-                            .disableAutocorrection(true)
-                            .padding()
-                            .background(Color("InputFieldBackground"))
-                            .cornerRadius(8)
-
-                        SecureField("Confirm Password", text: $confirmPassword)
-                            .autocapitalization(.none)
-                            .disableAutocorrection(true)
-                            .padding()
-                            .background(Color("InputFieldBackground"))
-                            .cornerRadius(8)
-
-                        TextField("First Name", text: $firstName)
-                            .padding()
-                            .background(Color("InputFieldBackground"))
-                            .cornerRadius(8)
-
-                        TextField("Last Name", text: $lastName)
-                            .padding()
-                            .background(Color("InputFieldBackground"))
-                            .cornerRadius(8)
-
-                        TextField("DD/MM/YYYY", text: Binding(
-                            get: {
-                                let formatter = DateFormatter()
-                                formatter.dateFormat = "dd/MM/yyyy"
-                                return formatter.string(from: dateOfBirth)
-                            },
-                            set: { newValue in
-                                let numbers = newValue.replacingOccurrences(of: "[^0-9]", with: "", options: .regularExpression)
-                                var formatted = ""
-
-                                for (index, char) in numbers.enumerated() {
-                                    if index == 2 || index == 4 {
-                                        formatted += "/"
-                                    }
-                                    formatted.append(char)
-                                }
-
-                                if formatted.count > 10 {
-                                    formatted = String(formatted.prefix(10))
-                                }
-
-                                if let date = DateFormatter.dateFromDDMMYYYY(formatted) {
-                                    dateOfBirth = date
-                                }
-                            }
-                        ))
-                        .keyboardType(.numberPad)
-                        .padding()
-                        .background(Color("InputFieldBackground"))
-                        .cornerRadius(8)
-                        .foregroundColor(Color("TextColor"))
-
-                        TextField("Phone Number", text: $phoneNumber)
-                            .autocapitalization(.none)
-                            .disableAutocorrection(true)
-                            .padding()
-                            .background(Color("InputFieldBackground"))
-                            .cornerRadius(8)
-
-                        if let errorMessage = errorMessage {
-                            Text(errorMessage)
-                                .foregroundColor(.red)
-                                .font(.montserrat(size: 14))
-                                .padding(.horizontal, 20)
-                        }
-
-                        Button(action: {
-                            registerUser()
-                        }) {
-                            if isLoading {
-                                ProgressView()
-                                    .frame(maxWidth: .infinity)
-                                    .padding()
-                                    .background(Color("PrimaryAccent"))
-                                    .cornerRadius(10)
-                            } else {
-                                Text("Register")
-                                    .font(.montserrat(size: 16, weight: .bold))
-                                    .foregroundColor(.white)
-                                    .frame(maxWidth: .infinity)
-                                    .padding()
-                                    .background(Color("PrimaryAccent"))
-                                    .cornerRadius(10)
-                                    .shadow(color: Color("PrimaryAccent").opacity(0.5), radius: 5, x: 0, y: 2)
-                            }
-                        }
-                    }
-                    .padding(.horizontal, 20)
-                }
-                .padding(.bottom, 20)
-
-                Spacer()
-
-                HStack {
-                    Text("Already have an account?")
+                    Text("Sign up to start your journey")
                         .font(.montserrat(size: 14))
                         .foregroundColor(.gray)
 
-                    Button(action: {
-                        onSignUp()
-                    }) {
-                        Text("Login")
-                            .font(.montserrat(size: 14, weight: .bold))
-                            .foregroundColor(Color("PrimaryAccent"))
+                    Group {
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text("Email Address")
+                                .font(.montserrat(size: 14, weight: .medium))
+                                .foregroundColor(Color("TextColor"))
+                            TextField("", text: $email)
+                                .autocapitalization(.none)
+                                .disableAutocorrection(true)
+                                .padding()
+                                .background(Color("InputFieldBackground"))
+                                .cornerRadius(8)
+                                .foregroundColor(Color("TextColor"))
+                        }
+
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text("Username")
+                                .font(.montserrat(size: 14, weight: .medium))
+                                .foregroundColor(Color("TextColor"))
+                            TextField("", text: $username)
+                                .autocapitalization(.none)
+                                .disableAutocorrection(true)
+                                .padding()
+                                .background(Color("InputFieldBackground"))
+                                .cornerRadius(8)
+                                .foregroundColor(Color("TextColor"))
+                        }
+
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text("Password")
+                                .font(.montserrat(size: 14, weight: .medium))
+                                .foregroundColor(Color("TextColor"))
+                            SecureField("", text: $password)
+                                .padding()
+                                .background(Color("InputFieldBackground"))
+                                .cornerRadius(8)
+                                .foregroundColor(Color("TextColor"))
+                        }
+
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text("Confirm Password")
+                                .font(.montserrat(size: 14, weight: .medium))
+                                .foregroundColor(Color("TextColor"))
+                            SecureField("", text: $confirmPassword)
+                                .padding()
+                                .background(Color("InputFieldBackground"))
+                                .cornerRadius(8)
+                                .foregroundColor(Color("TextColor"))
+                        }
+
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text("First Name")
+                                .font(.montserrat(size: 14, weight: .medium))
+                                .foregroundColor(Color("TextColor"))
+                            TextField("", text: $firstName)
+                                .padding()
+                                .background(Color("InputFieldBackground"))
+                                .cornerRadius(8)
+                                .foregroundColor(Color("TextColor"))
+                        }
+
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text("Last Name")
+                                .font(.montserrat(size: 14, weight: .medium))
+                                .foregroundColor(Color("TextColor"))
+                            TextField("", text: $lastName)
+                                .padding()
+                                .background(Color("InputFieldBackground"))
+                                .cornerRadius(8)
+                                .foregroundColor(Color("TextColor"))
+                        }
+
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text("Phone Number")
+                                .font(.montserrat(size: 14, weight: .medium))
+                                .foregroundColor(Color("TextColor"))
+                            TextField("", text: $phoneNumber)
+                                .padding()
+                                .background(Color("InputFieldBackground"))
+                                .cornerRadius(8)
+                                .foregroundColor(Color("TextColor"))
+                        }
+
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text("Date of Birth")
+                                .font(.montserrat(size: 14, weight: .medium))
+                                .foregroundColor(Color("TextColor"))
+                            TextField("", text: Binding(
+                                get: {
+                                    let formatter = DateFormatter()
+                                    formatter.dateFormat = "dd/MM/yyyy"
+                                    return formatter.string(from: dateOfBirth)
+                                },
+                                set: { newValue in
+                                    let numbers = newValue.replacingOccurrences(of: "[^0-9]", with: "", options: .regularExpression)
+                                    var formatted = ""
+                                    for (index, char) in numbers.enumerated() {
+                                        if index == 2 || index == 4 {
+                                            formatted += "/"
+                                        }
+                                        formatted.append(char)
+                                    }
+                                    if formatted.count > 10 {
+                                        formatted = String(formatted.prefix(10))
+                                    }
+                                    if let date = DateFormatter.dateFromDDMMYYYY(formatted) {
+                                        dateOfBirth = date
+                                    }
+                                }
+                            ))
+                            .keyboardType(.numberPad)
+                            .padding()
+                            .background(Color("InputFieldBackground"))
+                            .cornerRadius(8)
+                            .foregroundColor(Color("TextColor"))
+                        }
                     }
+                    .padding(.horizontal)
+
+                    if let errorMessage = errorMessage {
+                        Text(errorMessage)
+                            .foregroundColor(.red)
+                            .font(.montserrat(size: 14))
+                    }
+
+                    Button(action: registerUser) {
+                        if isLoading {
+                            ProgressView()
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                        } else {
+                            Text("Register")
+                                .font(.montserrat(size: 16, weight: .bold))
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color("PrimaryAccent"))
+                                .cornerRadius(10)
+                                .shadow(color: Color("PrimaryAccent").opacity(0.5), radius: 5, x: 0, y: 2)
+                        }
+                    }
+
+                    HStack {
+                        Text("Already have an account?")
+                            .font(.montserrat(size: 14))
+                            .foregroundColor(.gray)
+
+                        Button("Login") {
+                            onSignUp()
+                        }
+                        .font(.montserrat(size: 14, weight: .bold))
+                        .foregroundColor(Color("PrimaryAccent"))
+                    }
+                    .padding(.bottom, 30)
                 }
-                .padding(.bottom, 20)
+                .padding()
+                .padding(.bottom, keyboard.currentHeight)
+                .animation(.easeOut(duration: 0.25), value: keyboard.currentHeight)
             }
+            .scrollDismissesKeyboard(.interactively)
             .background(Color.white)
-            .edgesIgnoringSafeArea(.all)
             .navigationDestination(isPresented: $navigateToVerify) {
-                VerifyEmailView(email: email, onVerified: {
+                VerifyEmailView(email: email) {
                     onSignUp()
-                })
+                }
             }
         }
     }

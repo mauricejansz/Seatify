@@ -11,7 +11,7 @@ struct RestaurantReviewTabView: View {
     let restaurantId: Int
     @StateObject private var viewModel = ReviewViewModel()
     @State private var isAddingReview = false
-    @State private var currentUsername: String? = nil // Store logged-in username
+    @State private var currentUsername: String? = nil
     
     var body: some View {
         ScrollView {
@@ -25,11 +25,11 @@ struct RestaurantReviewTabView: View {
                         .foregroundColor(.gray)
                         .padding()
                 } else {
-                    // 🔹 Rating Summary
                     HStack(alignment: .center, spacing: 8) {
                         VStack(alignment: .center) {
                             Text("\(String(format: "%.1f", viewModel.averageRating))")
                                 .font(.montserrat(size: 60, weight: .bold))
+                                .foregroundColor(Color("PrimaryFont"))
                             Text("Rating")
                                 .font(.montserrat(size: 16))
                                 .foregroundColor(Color("PrimaryFont"))
@@ -47,7 +47,6 @@ struct RestaurantReviewTabView: View {
                     
                     Divider()
                     
-                    // 🔹 Reviews List
                     VStack(spacing: 12) {
                         ForEach(viewModel.reviews) { review in
                             ReviewCardView(
@@ -61,7 +60,6 @@ struct RestaurantReviewTabView: View {
                     }
                 }
                 
-                // 🔹 Add Review Button
                 Button(action: {
                     isAddingReview = true
                 }) {
@@ -80,7 +78,7 @@ struct RestaurantReviewTabView: View {
         }
         .onAppear {
             viewModel.fetchReviews(for: restaurantId)
-            currentUsername = UserDefaults.standard.string(forKey: "username") // ✅ Retrieve stored username
+            currentUsername = UserDefaults.standard.string(forKey: "username")
         }
         .sheet(isPresented: $isAddingReview) {
             AddReviewPopup(isPresented: $isAddingReview) { rating, comment in
@@ -90,7 +88,6 @@ struct RestaurantReviewTabView: View {
     }
 }
 
-// 🔹 Review Card View
 struct ReviewCardView: View {
     let review: Review
     let onDelete: () -> Void
@@ -100,6 +97,7 @@ struct ReviewCardView: View {
         VStack(alignment: .leading, spacing: 8) {
             Text(review.name)
                 .font(.montserrat(size: 16, weight: .bold))
+                .foregroundColor(Color("PrimaryFont"))
             StarRatingView(rating: review.rating, starSize: 16)
             Text(review.comment)
                 .font(.montserrat(size: 14))
@@ -115,8 +113,8 @@ struct ReviewCardView: View {
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading) 
         .background(Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: 12)) // Proper rounded edges
-        .shadow(color: Color.gray.opacity(0.2), radius: 4, x: 0, y: 2) // Soft shadow
-        .padding(.horizontal, 20) // Consistent padding
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .shadow(color: Color.gray.opacity(0.2), radius: 4, x: 0, y: 2)
+        .padding(.horizontal, 20)
     }
 }

@@ -27,7 +27,7 @@ struct LaunchScreenView: View {
             }
         }
         .safeAreaInset(edge: .bottom, spacing: 0) {
-            Color.clear.frame(height: 20) // Adds padding at the bottom to prevent cutoff
+            Color.clear.frame(height: 20)
         }
     }
 

@@ -12,7 +12,6 @@ class ReviewViewModel: ObservableObject {
     @Published var averageRating: Double = 0.0
     @Published var isLoading = false
 
-    // Fetch Reviews
     func fetchReviews(for restaurantId: Int) {
         guard let url = URL(string: "\(AppConfig.backendURL)/api/restaurants/\(restaurantId)/reviews/") else { return }
         
@@ -33,9 +32,6 @@ class ReviewViewModel: ObservableObject {
             }
             
             do {
-                if let jsonString = String(data: data, encoding: .utf8) {
-                    print("📜 Raw JSON Response: \(jsonString)")
-                }
                 let decodedResponse = try JSONDecoder().decode([Review].self, from: data)
                 DispatchQueue.main.async {
                     self.reviews = decodedResponse
@@ -47,7 +43,6 @@ class ReviewViewModel: ObservableObject {
         }.resume()
     }
 
-    // Add Review
     func addReview(for restaurantId: Int, rating: Double, comment: String) {
         guard let url = URL(string: "\(AppConfig.backendURL)/api/restaurants/\(restaurantId)/create_review/") else { return }
         
@@ -80,7 +75,6 @@ class ReviewViewModel: ObservableObject {
         }.resume()
     }
 
-    // Delete Review
     func deleteReview(reviewId: Int, restaurantId: Int) {
         guard let url = URL(string: "\(AppConfig.backendURL)/api/restaurants/delete_review/\(reviewId)/") else { return }
         
